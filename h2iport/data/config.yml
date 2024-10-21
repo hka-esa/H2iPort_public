@@ -1,0 +1,544 @@
+energy_density:  # kWh/kg
+  H2: 33.3
+  NH3: 5.2
+  MeOH: 7.02
+  LH2: 33
+  CH4: 15.44
+  LOHC: 2 # 1.3-2.4
+
+# Abbreviations
+# - CapEx: specific investment costs in €/base unit
+# - RMI: Annual repair, maintenance and inspection costs in 1/(CapEx*year)
+# - OL: operating life in years
+# - eta: efficiency
+# - k: indicates a factor
+# - PEM: proton exchange membrane
+
+projections:
+  years:
+    # - 2025  # landing or electrolyzer is unrealistic in 2025
+    - 2027
+    - 2030
+    - 2035
+    - 2040
+    - 2045
+    #- 2050
+  default_year: 2027
+
+main:
+
+  coords: [49.015555, 8.3277778]  # latitude / longitude
+  interest_rate: 0.08
+  H2Ds:
+    - CH2  # Compressed hydrogen (we assume 30-100 bar)
+    - NH3  # Ammonia
+    # - MeOH  # Methanol
+    # - LH2  # Liquefied hydrogen
+    # - LOHC  # Liquid organic hydrogen carrier  # 
+    # - CH4  # Methane
+  heat_temp_levels:
+    - DHN_summer
+    - DHN_winter
+  cool_temp_levels:
+    - Elc
+    #- amb
+    #- rhine_water
+  heat_temperatures:
+    DHN_summer: 80  # °C Source: https://www.stadtwerke-karlsruhe.de/wMedia/docs/fernwaerme/TAB-Booklet-inkl-Korrekturblatt.pdf
+    DHN_winter: 120  # °C Source: https://www.stadtwerke-karlsruhe.de/wMedia/docs/fernwaerme/TAB-Booklet-inkl-Korrekturblatt.pdf
+  cool_temperatures:
+    Elc: 57  # °C  H-TEC https://www.h-tec.com/fileadmin/user_upload/news/beitraege/PDF/H-TEC-Datenblatt-ME450-DE-web.pdf
+  landing_settings:
+    ships_per_day:
+      2027: 1
+      2030: 1
+      2035: 2
+      2040: 2
+      2045: 2
+      2050: 2
+    frequency_days:
+      2027: 2
+      2030: 1
+      2035: 1
+      2040: 1
+      2045: 1
+      2050: 1
+    maximum_power:
+      CH2: 300000 # kW discharging power
+      NH3: 1200000 # kW discharging power
+  reserve:
+    consider: False
+    amount:
+      2027: 31232876.7
+      2030: 124383561.6
+      2035: 402739726.0
+      2040: 496986301.4
+      2045: 496986301.4
+    equals_hours: 480 # = 20 Days * 24 Hours. Time of reserve  
+    time_to_reach: 1440 # = 20 * 3 * 24, should be factor 3-4 of equivalent days
+    wheight_factor: 200 # punishment - 100 equals ca. 5 % overall cost increase by 1 % and 1 hour storage limit cut
+
+comp:  # Components
+  Pip:
+    # MaxIn: # TBD! 
+    CapEx: 100 # €, just the compressor station, source: Stadwerk, https://www.get-h2.de/wp-content/uploads/2021_European-Hydrogen-Backbone_Report.pdf
+    CapEx_MiRO: 100 # € just the compressor station
+    #300 #€/(kW*1000km),  Source: No source
+    RMI: 0.02 # Source: https://doi.org/10.1016/j.rser.2020.110171 and https://www.get-h2.de/wp-content/uploads/2021_European-Hydrogen-Backbone_Report.pdf
+    OL: 30 # Source: https://corridoreis.anl.gov/documents/docs/technical/apt_61012_evs_tm_08_2.pdf page 37 and https://www.get-h2.de/wp-content/uploads/2021_European-Hydrogen-Backbone_Report.pdf
+    eta: 0.99 #Source: https://www.energy.gov/sites/default/files/2015/08/f25/fcto_myrdd_delivery.pdf
+    # CH2_preperation: # TBD! 
+    price_hydrogen:
+      2027: 0.22 # irrelevant
+      2030: 0.2 # €/kWh, source: https://www.cines.fraunhofer.de/content/dam/zv/cines/dokumente/HyPAT_Working-Paper-01_2023_Preiselastische-Nachfrage.pdf
+      2035: 0.175 # €/kWh
+      2040: 0.15 # €/kWh, source: https://www.cines.fraunhofer.de/content/dam/zv/cines/dokumente/HyPAT_Working-Paper-01_2023_Preiselastische-Nachfrage.pdf
+      2045: 0.135 # €/kWh
+      2050: 0.12 # €/kWh, source: https://www.cines.fraunhofer.de/content/dam/zv/cines/dokumente/HyPAT_Working-Paper-01_2023_Preiselastische-Nachfrage.pdf
+    #0.161 # €/kWh from Egerer2023 and https://www.energate-messenger.com/news/222774/price-for-domestic-hydrogen-could-drop-to-5-euros-in-2025
+    price_transport:
+      2027: 0.043 # same as 2030
+      2030: 0.043 # 0.027 €/(kwh*1000km) https://www.bibb.de/dienst/publikationen/de/18892
+      2035: 0.043 # old source: https://acer.europa.eu/Official_documents/Acts_of_the_Agency/Publication/Transporting%20Pure%20Hydrogen%20by%20Repurposing%20Existing%20Gas%20Infrastructure_Overview%20of%20studies.pdf
+      2040: 0.043 # taxes and sales are around 1,6 ct/kWh. source: email netze suedwest and dvgw
+      2045: 0.043 # resulting costs are: 0.027 + 0.016 ct/kWh = 0.043 €/kWh
+      2050: 0.043
+    #0.006 # €/ kWh from https://ehb.eu/page/estimated-investment-cost , took 0.2 € per kg H2 equals 0.006 € / kWh
+    start_year: 2030
+    feed_in: False
+    price_hydrogen_sell:
+      2027: 0.11 # wild guess: half the price of buying. But only if feed_in TRUE !
+      2030: 0.1 
+      2035: 0.0875
+      2040: 0.075 
+      2045: 0.0675 
+      2050: 0.06
+  Lan:  # Landing
+    CH2: # See also https://www.pv-magazine.com/2021/03/02/australian-green-hydrogen-vessel-deemed-highly-competitive/
+      CapEx: 0.297 # €/kWh Source: https://www.ffe.de/wp-content/uploads/2022/02/et_2022_h2transportkosten-1.pdf , 0.223 €/kWh Source: https://doi.org/10.1016/j.ijhydene.2022.07.113
+      RMI: 0.04  # Source: https://www.ffe.de/wp-content/uploads/2022/02/et_2022_h2transportkosten-1.pdf
+      OL: 30  # Source: rough estimate. See Email Bruna, 30.08.23
+      eta: 0.99  # Source: rough estimate
+      # price: 0.125  # €/kWh, Source: rough estimate e.g. https://de.statista.com/statistik/daten/studie/1195863/umfrage/produktionskosten-von-wasserstoff-nach-wasserstofftyp-in-deutschland
+      # price: 0.151  # €/kWh, Source: https://www.energate-messenger.de/news/222774/preis-fuer-wasserstoff-sinkt-2025-auf-5-euro
+      price: 0.161  # €/kWh, Source: Egerer2023
+      # price: 0.161  # €/kWh, Source: https://www.energate-messenger.com/news/222774/price-for-domestic-hydrogen-could-drop-to-5-euros-in-2025
+    NH3:
+      CapEx: 0.297 # €/kWh Source: https://www.ffe.de/wp-content/uploads/2022/02/et_2022_h2transportkosten-1.pdf , 0.223 €/kWh Source: https://doi.org/10.1016/j.ijhydene.2022.07.113
+      RMI: 0.04  # Source: https://www.ffe.de/wp-content/uploads/2022/02/et_2022_h2transportkosten-1.pdf
+      OL: 30  # Source: rough estimate. See Email Bruna, 30.08.23
+      eta: 0.99  # Source: rough estimate and checked. See Email Bruna, 30.08.23
+      # price: 0.092  # €/kWh, Source: https://emvg.energie-und-management.de/filestore/newsimgorg/Illustrationen_Stimmungsbilder/Studien_als_PDF/Competitiveness_of_green_hydrogen_import_pathways_for_Germany_in_2025.orig.pdf
+      # price: 0.10  # €/kWh, Source: rough estimate e.g. https://www.pv-magazine.de/2022/09/14/fraunhofer-iee-zeigt-potenziale-und-kosten-fuer-den-export-von-gruenem-ammoniak-nach-europa/
+      # price: 0.10  # €/kWh, Source: Egerer2023 - was latest one
+      price:
+        2027: 0.225 # self declared first value
+        2030: 0.21
+        2035: 0.1935
+        2040: 0.177
+        2045: 0.1635
+        2050: 0.15 # from https://doi.org/10.1371/journal.pone.0281380
+    # MeOH:
+    LH2:
+      CapEx: 500  # €/kW_out, Source: rough estimate
+      RMI: 0.02  # Source: rough estimate
+      OL: 40  # Source: rough estimate
+      eta: 0.99  # Source: rough estimate
+      price: 0.15  # €/kWh, # TODO: overwrite
+    # LOHC:
+    # CH4:
+  EG_PPA:
+    PV:
+      price: 0.0 # €/kWh
+    OnWind:
+      price: 0.0 # €/kWh
+    OffWind:
+      price: 0.0 # €/kWh
+  Con:  # Conversion
+    CH2:  # in
+      NH3:  # out
+        # Haber-Bosch (HB) process and Air separtion unit (ASU)
+        # see also IEA2019
+        CapEx: 707  # €/kW_out, Source: Egerer2023, Calc: 510 (HB) + 197 (ASU)
+        RMI: 0.02  # Source: Egerer2023
+        OL: 30  # Source: Egerer2023
+        # OL: 25  # Source: Assumption annex of IEA2019
+        eta: 0.62  # New Souce: DVGW Paper 
+        k_el: 0.123  # kWh_el/kWh_out, Source: Egerer2023, Calc: 640 kWh/t_NH3 / 5200 kWh/t
+        # pressure: 250  # bar, Source Egerer2023, currently not used
+        # space_demand: 0  # m2 per kW_out
+      MeOH:
+        # see also Assumption annex of IEA2019
+        CapEx: 300  # €/kW_out, Source: Runge2019 Table 4
+        RMI: 0.04  # Source: Runge2019 Table 4
+        OL: 20  # Source: Runge2019 Table 4
+        eta: 0.886  # Source: Runge2019 Table 4
+        k_el: 0.0118  # kWh_el/kWh_out, Source: Runge2019 Table 4
+        # space_demand: 0  # m2 per kW_out
+      LH2:
+        # see Eckl2022
+        CapEx: 9191 # €/kW_out, Source: Eckl2022, Table 7, Calc: 9100000 / (30 * 33)
+        RMI: 0.08  # Source: Eckl2022, Table 7
+        OL: 20  # Source: Assumption annex of IEA2019
+        eta: 0.9835  # Source: rough estimate 
+        k_el: 0.20  # kWh_el/kWh_out, Source: Eckl2022, Table 7
+          # see also https://www.wasserstoffrat.de/fileadmin/wasserstoffrat/media/Dokumente/2021-07-02_NWR-Grundlagenpapier_Wasserstofftransport.pdf "30% of the transported energy must be used for liquefaction"
+          # see also "Für die Wasserstoffverflüssigung unter 20,27 Kelvin (−253 °C) wird allerdings mindestens 20 % der Ausgangsenergie benötigt." https://de.wikipedia.org/wiki/Wasserstofftankstelle#Versorgung_von_Wasserstofftankstellen
+          # space_demand: 0  # m2 per kW_out
+      LOHC:
+        # hydrogenation
+        # see also Niermann2021
+        CapEx: 128  # €/kW_out, Source: Runge2019 Table 5, for 200 MW plant
+        RMI: 0.04  # Source: Runge2019 Table 5
+        OL: 20  # Source: Runge2019 Table 5
+        eta: 1  # Source: Runge2019 Table 5
+        k_el: 0.0118  # kWh_el/kWh_out, Source: Runge2019 Table 5
+        # space_demand: 0  # m2 per kW_out
+      CH4:
+        # see Assumption annex of IEA2019
+        CapEx: 200  # TODO: overwrite
+        RMI: 0.01  # TODO: overwrite
+        OL:  25  # Source: Assumption annex of IEA2019
+        eta: 0.9  # TODO: overwrite
+        k_el: 0.05  # in kWh_el/kWh_out #TODO: overwrite
+        # space_demand: 0  # m2 per kW_out
+    NH3:
+      CH2:  # Ammonia cracker
+        # CapEx: 461  # €/kW_out, Source: https://emvg.energie-und-management.de/filestore/newsimgorg/Illustrationen_Stimmungsbilder/Studien_als_PDF/Competitiveness_of_green_hydrogen_import_pathways_for_Germany_in_2025.orig.pdf, Calc: (2400€/kg_NH3)/5.2
+        CapEx: 832  # €/kW_out, Source: Egerer2023, Calc: (3580000 €/t_NH3 / 5200 kWh/t_NH3) + 144 €/kW_H2 (for H2-compressor to 100 bar)
+        # CapEx: 823  # €/kW_out, Source: Perna2020, Calc: = 4280 €/(kg*h) / 5.2 kWh/kg
+        # CapEx: 2694  # €/kW_out, Source: Cesaro2021 Fig. 4, Calc: = 18171000*2**0.7451/2 USD/t_H2/h * 0.92 €/USD / 5200 = ((18171000*2^0.7451)/2)*0.92/5200
+        # RMI: 0.03  # Source: Perna2020
+        RMI: 0.04  # Source: Egerer2023
+        OL: 30  # Source: Egerer2023
+        # eta: 0.99  # Source: Cesaro2021 Table C1
+        eta: 0.79  # Source: Egerer2023
+        k_el: 0.18  # kWh_el/kWh_out, New Source: DVGW, Old Source: Egerer2023, Calc: 400 kWh/t_NH3 / 5200 kWh/t = 400/5200
+        # space_demand: 0  # m2 per kW_out
+      # MeOH: 
+      # LH2: 
+      # LOHC: 
+      # CH4: 
+    # MeOH:
+      # CH2:  # Fraunhofer IMM
+      # NH3:
+      # LH2:
+      # LOHC:
+      # CH4:
+    # LH2:
+    #   CH2: # evaporation station
+    #     CapEx: 4.34 # €/kW_out, Source: Eckl2022 Table 9
+    #       # Calc: =4300 € / (30 kg/h * 33 kWh/kg) = 4300 / (30*33)
+    #     RMI: 0.04  # Source: Eckl2022 Table 9
+    #     OL: 10  # Source: Eckl2022 Table 9
+    #     eta: 1  # Source: Eckl2022 Table 9
+    #     k_el: 0.0182  # kWh_el/kWh_out, Source: Eckl2022 Table 9
+          # Calc: =0.6 kWh/kg / 33 kWh/kg = 0.6/33=0.0182
+    #   NH3:
+    #   MeOH:
+    #   LOHC:
+    #   CH4:
+    # LOHC:
+    #   CH2: # dehydrogenation
+    #     CapEx: 839  # €/kWh, Source: Runge2019 Table 5, values for 0.9 MW plant
+    #     RMI: 0.04  # Source: Runge2019 Table 5
+    #     OL: 20   # Source: Runge2019 Table 5
+    #     eta: 1  # Source: Runge2019 Table 5
+    #     k_el: 0.0354  # Source: Runge2019 Table 5
+    #   NH3:
+    #   MeOH:
+    #   LH2:
+    #   CH4:
+    # CH4:
+    #   CH2:
+    #   NH3:
+    #   MeOH:
+    #   LH2:
+    #   LOHC:
+
+
+  HDS:  # H2D storage
+    CH2:
+      # CapEx: 10  # €/kWh, Source: Petkov_2020
+      CapEx: 13.501  # €/kWh, Source: Runge2019, Egerer2023
+      # RMI: 0.023  # Source: Petkov_2020
+      RMI: 0.01  # Source: Runge2019, Egerer2023
+      # OL: 23  # Source: Petkov_2020
+      OL: 30  # Source: Runge2019, Egerer2023
+      in_per_cap: 1  # kW/kWh, 1 hour for 400kg tank Source: https://juser.fz-juelich.de/record/136392/files/Energie&Umwelt_144.pdf
+      out_per_cap: 1  # kW/kWh  Source: https://juser.fz-juelich.de/record/136392/files/Energie&Umwelt_144.pdf
+      eta_in: 0.98  # Source: https://doi.org/10.1016/j.ijhydene.2022.06.160
+      eta_out: 0.98  # Source: https://doi.org/10.1016/j.ijhydene.2022.06.160
+      eta_self: 0.00001  # in 1/h Source: https://doi.org/10.1016/j.ijhydene.2022.06.160 , changed to 0.00001 to not store indefinitely
+      k_ini: 0.0  # initial and final energy filling share
+      # pressure: 60  # Egerer2023 currently unused
+    NH3:
+      # CapEx: 0.120  # €/kWh, Source: Fasihi2021, Calc: 623 €/t_NH3 / 5200 kWh/t
+      CapEx: 0.173  # €/kWh, Source: Egerer2023, Calc: 900 €/t_NH3 / 5200 kWh/t
+      # CapEx: 3  # €/kWh  #TODO: overwrite
+        # rough estimation from Dias2020: 0.08 €/kg / 5.2 kWh/kg * 100 * 20 = 0.08/5.2*10*20
+      # RMI: 0.04  # Source: Fasihi2021
+      RMI: 0.05  # Source: Egerer2023
+      OL: 30  # Source: Egerer2023, Fasihi2021
+      in_per_cap: 0.042  # kW/kWh, Source: Fasihi2021
+      out_per_cap: 0.042  # kW/kWh, Source: Fasihi2021
+      eta_in: 0.995  # Source: Fasihi2021 # Changed from 1 to 0.995 prevent charging and discharging simultaneously
+      eta_out: 0.995  # Source: Fasihi2021 # Changed from 1 to 0.995 prevent charging and discharging simultaneously
+      eta_self: 0.00001  # self discharge in 1/h Source: https://www.mdpi.com/2077-1312/10/10/1500
+      k_ini: 0.0  # initial and final energy filling share
+    MeOH:
+      CapEx: 0.28  # €/kWh  #TODO: overwrite
+        # rough estimation from Dias2020: 0.01 €/kg / 7.02 kWh/kg * 100 * 20 = 0.01/7.02*10*20
+      RMI: 0.01  # TODO:overwrite
+      OL: 20  #TODO: overwrite
+      in_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      out_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      eta_in: 1  #TODO: overwrite
+      eta_out: 1  #TODO: overwrite
+      eta_self: 0  # self discharge in 1/h #TODO: overwrite  
+      k_ini: 0.0  # initial and final energy filling share
+    LH2:
+      CapEx: 0.28  # €/kWh  #TODO: overwrite
+      RMI: 0.01  # TODO:overwrite
+      OL: 20  #TODO: overwrite
+      in_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      out_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      eta_in: 1  #TODO: overwrite
+      eta_out: 1  #TODO: overwrite
+      eta_self: 0.002  # self discharge in 1/h, Source: Stockl2021
+      k_ini: 0.0  # initial and final energy filling share
+    CH4:
+      CapEx: 8.96  # €/kWh  #TODO: overwrite
+        # rough estimation from Dias2020: 0.69 €/kg / 15.4 kWh/kg * 100 * 20 = 0.69/15.4*10*20
+      RMI: 0.01  # TODO:overwrite
+      OL: 20  # TODO: overwrite
+      in_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      out_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+      eta_in: 1  # TODO: overwrite
+      eta_out: 1  # TODO: overwrite
+      eta_self: 0  # self discharge in 1/h, # TODO: overwrite  
+      k_ini: 0.0  # initial and final energy filling share
+    # LOHC:
+    #   CapEx: 8.96  # €/kWh  #TODO: overwrite
+    #   RMI: 0.01  # TODO:overwrite
+    #   OL: 20  # TODO: overwrite
+    #   in_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+    #   out_per_cap: 0.5  # kW/kWh  #TODO: overwrite
+    #   eta_in: 1  # TODO: overwrite
+    #   eta_out: 1  # TODO: overwrite
+    #   eta_self: 0  # per hour # TODO: overwrite  
+    #   k_ini: 0.7  # initial and final energy filling share # TODO: overwrite  
+
+  Tra:  # H2D transport Truck
+    Truck:
+      CH2:
+        CapEx: 0.35  # €/(kW*1000km), Source: https://juser.fz-juelich.de/record/136392/files/Energie&Umwelt_144.pdf , https://doi.org/10.1016/j.ijhydene.2012.08.066
+        OpEx: 0.3 # €/(kWh*1000km), Source: https://juser.fz-juelich.de/record/136392/files/Energie&Umwelt_144.pdf
+        #0.00485  # €/(kWh*1000km), Source: rough estimates (e.g. pipelines with high capacity factor 0,16€/kg*1000km = 0.00485 €/(kWh*1000km) https://www.wasserstoffrat.de/fileadmin/wasserstoffrat/media/Dokumente/2021-07-02_NWR-Grundlagenpapier_Wasserstofftransport.pdf
+        RMI: 0.12  # Source: https://doi.org/10.1016/j.ijhydene.2012.08.066
+        OL: 8  # Years, Source: https://doi.org/10.1016/j.ijhydene.2012.08.066
+        eta: 1  # 1/1000km, no boil-off  
+      NH3:
+        CapEx: 1.44  # €/(kW*1000km), Source: Master thesis Costs and energy efficiency of long-distance hydrogen transport options
+        OpEx: 0.03  # €/(kWh*1000km), 2% capex, Source: master thesis
+        RMI: 0.02  # 2% capex, Source: master thesis
+        OL: 20  
+        eta: 0.9996  # 1/1000km 0.04% boil-off  
+      # LH2:
+        # for liquid hydrogen truck transport, see Eckl2022 Table 8
+    Train:
+      CH2:
+        CapEX: 113 # €/(kW*1000km)  https://www.nrel.gov/docs/fy99osti/25106.pdf
+        OpEx: 0.86 # €/(kWh.1000km) https://publications.anl.gov/anlpubs/2018/11/148265.pdf
+        RMI: 0.02 # % https://doi.org/10.1016/j.apenergy.2017.05.050
+        OL: 15 # Years, https://www.nrel.gov/docs/fy99osti/25106.pdf
+        eta: 1 # 
+      NH3:
+        CapEX: 113 # €/(kW*1000km)  https://www.nrel.gov/docs/fy99osti/25106.pdf
+        OpEx: 0.00515 # €/(kWh.1000km) https://www.osti.gov/servlets/purl/1807903
+        RMI: 0.02 # % https://doi.org/10.1016/j.apenergy.2017.05.050
+        OL: 15 # Years, https://www.nrel.gov/docs/fy99osti/25106.pdf
+        eta: 1 #
+
+  EG:  # Electricity grid
+    price_addon: 0.028  # Taxes, duties & levies in €/kWh_el - Herr Weitemeyer
+    consum_price:
+      2027: 1 # Default value, so it wouldn't be used, even if allowed. 
+      2030: 1 # Needs to be adapted when needed
+      2035: 1
+      2040: 1
+      2045: 1
+      2050: 1
+    grid_active:
+      2027: 0
+      2030: 0
+      2035: 1
+      2040: 1
+      2045: 1
+      2050: 1 
+    peak_price: 30  # Peak electricity purchase price in €/kW
+    max_buy: 0  # kW
+    max_sell: 1e6  # kW equals 1 GW
+    CEFs: DRAF-default  # Carbon emission factors (DRAF-default, filepath to CSV, or float) in kgCO2eq/kWh_el
+    feedin_reduces_emissions: False
+    feedin_price: 0.0
+    price_type: var # can be fix or var
+
+  OnPV:  # Onsite Photovoltaic (no network charges)
+    CapEx: 460  # €/kWp, for Europe 2019, Source: Vartiainen_2019
+    RMI: 0.02  # Source: @ISE_2018
+    OL: 25  # Source: @ISE_2018
+    P_exist: 0  # kWp, currently existing capacity
+    A_available: 50000  # available area for new PV in m²
+    specific_area: 6.5  # m²/kW_peak, area needed for one kW_peak, Source: https://www.dachvermieten.net/wieviel-qm-dachflaeche-fuer-1-kw-kilowatt
+    capacity_factor: 0.149  # for 2019, Karlsruhe 30°, tilt to south, 0.1 system loss, Source: renewables.ninja
+    tilt: 30  # °, only used for profile calculation 
+
+  PV:   # Offsite Photovoltaic
+    CapEx: 460  # €/kWp, for Europe 2019, Source: Vartiainen_2019
+    RMI: 0.02  # Source: @ISE_2018
+    OL: 25  # Source: @ISE_2018
+    P_exist: 0  # kWp, currently existing capacity
+    P_max: 1e8  # kWp, maximum allowed new capacity
+    capacity_factor: 0.149  # for 2019, Karlsruhe 30°, tilt to south, 0.1 system loss, Source: renewables.ninja
+    tilt: 30  # °, only used for profile calculation 
+
+  WT:  # Wind Turbine
+    CapEx: 1682  # €/kWp, Source: https://windeurope.org/newsroom/press-releases/europe-invested-41-bn-euros-in-new-wind-farms-in-2021
+    # CapEx: 1260  # €/kWp, for 2030, Source: Egerer2023
+    RMI: 0.01  # Source: https://www.npro.energy/main/en/help/economic-parameters
+    OL: 20  # Source: https://www.twi-global.com/technical-knowledge/faqs/how-long-do-wind-turbines-last
+    P_exist: 0  # kWp
+    P_max: 1e8  # kWp, maximum allowed new capacity
+    capacity_factor: 1  # new, Karlsruhe - not needed, since we always have 1 kW as reference
+    # capacity_factor: 0.206  # Standort Rheinhafen, Source: https://www.renewables.ninja
+
+  Elc:  # Electrolyzer
+    water_price: 1.0  # Preis für VE-Wasser als Basis für die Elekrolyse in €/t
+    chosen_tec: PEM
+    tecs:
+      PEM:  # Proton exchange membrane electrolyzer
+        # CapEx: 1332  # €/kW_el for 2019, Source: p.45 of IEA2019 with 0.92 €/USD
+        CapEx: 2500  # €/kW_el, Source: @Petkov2020
+        # CapEx: 900  # €/kW_el, for 2025, Source: https://emvg.energie-und-management.de/filestore/newsimgorg/Illustrationen_Stimmungsbilder/Studien_als_PDF/Competitiveness_of_green_hydrogen_import_pathways_for_Germany_in_2025.orig.pdf
+        # CapEx: 782  # €/kW_el, valid for for 10 MW in 2025, Source: Reksten2022, Calc: 850 USD/kW * 0.92 €/USD
+          # Note: Reksten2022 gives also a function 
+        # CapEx: 500  # €/kW_el  projection for 2030, Source: Egerer2023
+        # CapEx: 500  # €/kW_el projection for 2035, Source: Runge2019
+        # CapEx: 300  # €/kW_el, Source: @Vartiainen2021 projections for 2025 but for a 100 MW_el system
+        RMI: 0.038   # Source: @Petkov2020
+        # RMI: 0.04   # Source: Egerer2023
+        # OL: 10  # Source: @Egerer2023
+        OL: 20  # Source: @Petkov2020
+        eta: 
+          t0: 0.75  # Begin of Life, Source: Siemens H-TEC https://www.h-tec.com/fileadmin/user_upload/news/beitraege/PDF/H-TEC-Datenblatt-ME450-DE-web.pdf Garantierter Systemwirkungsgrad
+          t10: 0.62  # End of Life, Source: Siemens H-TEC https://www.h-tec.com/fileadmin/user_upload/news/beitraege/PDF/H-TEC-Datenblatt-ME450-DE-web.pdf Garantierter Systemwirkungsgrad
+        eta_th:
+          t0: 0.2  # Begin of Life, 80% of 25% https://www.sciencedirect.com/science/article/pii/S0360319923015410 H-TEC https://www.h-tec.com/fileadmin/user_upload/news/beitraege/PDF/H-TEC-Datenblatt-ME450-DE-web.pdf 170kW bei einer 1MW Anlage
+          t10: 0.32  # End of Life, 80% of 40% https://www.sciencedirect.com/science/article/pii/S0360319923015410 H-TEC https://www.h-tec.com/fileadmin/user_upload/news/beitraege/PDF/H-TEC-Datenblatt-ME450-DE-web.pdf 170kW bei einer 1MW Anlage
+        # plant_footprint: 0.048  # in m2/kW_el, Source: IEA2019 currently unused
+        water_rate: 11.5  # in kg_water / kg_hydrogen, Source: Siemens, Hr Kugler # stays, even with new update, since we need more than averag water
+        # pressure: 80 # bar Source: Egerer2023 currently unused
+      Alkaline:  # Alkaline water electrolyzer
+        # CapEx: 600  # €/kW_el for 2025, Source: https://emvg.energie-und-management.de/filestore/newsimgorg/Illustrationen_Stimmungsbilder/Studien_als_PDF/Competitiveness_of_green_hydrogen_import_pathways_for_Germany_in_2025.orig.pdf
+        # CapEx: 574  # €/kW_el for 2019, Source: p.45 of IEA2019 with 0.92 €/USD
+        # CapEx: 400  # €/kW_el projection for 2035, Source: Runge2019
+        # also look at IRENA2020 in USD/kW: 770 (2020), 540 (2030), 435 (2040)
+                              # in   €/kW: 708 (2020), 497 (2030), 400 (2040)
+        CapEx: 378  # €/kW_el for 2025, Source: Fasihi2021, Calc: mean(685 €/kWh_H2, 380 €/kWh_H2) * 0.71  = (685+380)*0.71/2
+        RMI: 0.035  # Source: Fasihi2021
+        # OL: 17  # for 2030, Source: IEA2019
+        # OL: 20  # for 2035, Source: Runge2019
+        OL: 30  # for 2030, Source: Fasihi2021
+        # eta: 0.71  # for 2030, Source: IEA2019
+        eta: 0.7475  # for 2025, Source: Fasihi2021, Calc: (0.733+0.762)/2
+        eta_th: 0.17  # TODO
+        # plant_footprint: 0.095  # in m2/kW_el, Source: IEA2019
+        water_rate: 9  # in kg_H2O / kg_H2
+        # pressure: 60 # bar, Source: Egerer2023 currently unused
+
+
+  EHP:  # Electric heat pump
+    # CapEx: 300  # €/kW_th_hot  (0.5 MW-10 MW) --> (490-1100 €/kW_th) Source: @Sandvall_2017
+    CapEx: 572  # €/kW_th_hot, Source: Egerer2023
+    # OL: 18  # Source: @VDI2067
+    OL: 25  # Source: Egerer2023
+    # RMI: 0.025  # Source: @VDI2067
+    RMI: 0.03  # Source: Egerer2023
+    eta: 0.5  # ratio of reaching the ideal Carnot COP, Source: @KALTSCH_2020
+    cooling_levels:
+      - Elc
+      - amb   # if the electrolyzer is not running, ambient air could be used as heat source 
+      - rhine_water  # if the electrolyzer is not running, rhine water could be used as heat source 
+    heating_levels:
+      - DHN_summer
+      - DHN_winter
+
+
+  DHN:  # District Heating network
+    price:
+      DHN_summer: 0.00  # €/kWh_th, Source: no estimation needed
+      DHN_winter: 0.03  # €/kWh_th, Source: estimate, gas price
+    dQ_max:
+      DHN_summer: 0  # kW  Not allowed in summer
+      DHN_winter: 1e6  # kW 
+    start:
+      DHN_summer: "03-01"  # Format: MM-TT, Source: Stadtwerk, period where no heat feed is possible
+      DHN_winter: "11-01"  # Format: MM-TT, Source: Stadtwerk, period where heat feed is possible
+
+
+  BES:  # Battery energy storage
+    CapEx: 500  # €/kWh, Source: Figgener2023, changed it to 500 € to be more realistic
+    # Capex: 125  # €/kWh for 2030, Source: Egerer2023
+    RMI: 0.02  # Source: @Juelch_2016
+    # RMI: 0.03  # Source: Egerer2023
+    eta_cycle: 0.95  # Source: @Carroquino_2021
+    eta_self: 1.91e-5  # (0.0035 + 0.024) / 2 / (30 * 24) (=0.35% to 2.5% per month) Source: @Redondo_2016
+    OL: 20  # Source: Egerer2023, @Juelch_2016
+    in_per_capa: 1.0  # C rate
+    out_per_capa: 1.0  # C rate
+    initial_and_final_filling_level: 0
+    existing_capa: 0
+
+
+  TES:  # Thermal energy storage
+    CapEx: 20  # €/kWh, Source: Egerer2023
+    # CapEx: 29  # €/kWh
+    RMI: 0.015  # Source: Egerer2023
+    # RMI: 0.01  # Source: @FFE_2016
+    eta_self: 0.00029167  # Source: https://estoolbox.org/index.php/en/background-2/8-samples/8-tes-introduction,  Calc: 0.007 / 24
+    # eta_in: 0.95  # Source: Egerer2023  # not implemented
+    # eta_in: 0.99  # Source: @FFE_2016  # not implemented
+    OL: 30  # Source: @Bracco_2016, Egerer2023
+    initial_and_final_filling_level: 0.0
+    in_per_capa: 0.5
+    out_per_capa: 0.5
+    temp_levels:
+      - Elc
+
+  REC:
+    amb:
+      cost: 0.01 # €/kWh
+    rhine:
+      cost: 0.005 # €/kWh
+
+# PEMFC
+  # see Arlt2018
+
+sources:
+  Niermann2021: https://doi.org/10.1016/j.rser.2020.110171
+  IEA2019: https://www.iea.org/reports/the-future-of-hydrogen
+  Eckl2022: https://doi.org/10.1016/j.ijhydene.2022.05.266
+  Cesaro2021: https://doi.org/10.1016/j.apenergy.2020.116009
+  Perna2020: https://doi.org/10.1051/e3sconf/202019705001
+  IRENA2020: https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Apr/IRENA_Global_Renewables_Outlook_2020.pdf
+  Dias2020: https://doi.org/10.3389/fmech.2020.00021
+  Arlt2018: https://doi.org/10.1109/IGESC.2017.8283465
+  Figgener2023: https://doi.org/10.48550/arXiv.2203.06762
+  Runge2019: https://doi.org/10.1016/j.apenergy.2018.10.023
+  Egerer2023: https://doi.org/10.1016/j.apenergy.2023.120662
+  Stockl2021: https://doi.org/10.1038/s41598-021-92511-6
+  Reksten2022: https://doi.org/10.1016/j.ijhydene.2022.08.306
+  Fasihi2021: https://doi.org/10.1016/j.apenergy.2020.116170
+  Vartiainen_2019: https://doi.org/10.1002/pip.3189
+  # for @... sources see https://github.com/DrafProject/draf/blob/main/draf/prep/data_base.py

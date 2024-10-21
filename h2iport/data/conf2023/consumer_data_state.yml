@@ -1,0 +1,24 @@
+Total:
+  full_name: H2 demand
+  road_distance: 20  # km
+  coords: [49.01377, 8.40443]  # lat/lon
+  demand:
+    annual_energy:
+      CH2:
+        # 2020: 1.8e9  # kWh  # 2020 total H2 demand. Source: Wasserstoff-Roadmap Baden-Württemberg, 2020 https://um.baden-wuerttemberg.de/de/energie/energiewende/wasserstoffwirtschaft/roadmap
+        # 2025: 2.20e8  # kWh, 10% of state demand, Source: Sektorziele 2030 und klimaneutrales Baden-Württemberg 2040: Teilbericht Sektorziele 2030, Juni 2022, Table 26, divided by 3.6
+        2027: 1.84e8  # kWh, Linearly Interpolated, Calc: 1.14e8 + (2/5) * (2.90e8 - 1.14e8) # Again divided by 2 fpr half power: 3.64e8/2 = 1.82
+        2030: 2.90e8  # kWh, 10% of state demand, Source: Sektorziele 2030 und klimaneutrales Baden-Württemberg 2040: Teilbericht Sektorziele 2030, Juni 2022, Table 26, divided by 3.6
+        2035: 0.57e9  # kWh, 10% of state demand, Source: Sektorziele 2030 und klimaneutrales Baden-Württemberg 2040: Teilbericht Sektorziele 2030, Juni 2022, Table 26, divided by 3.6
+        2040: 0.80e9  # kWh, 10% of state demand, Source: Sektorziele 2030 und klimaneutrales Baden-Württemberg 2040: Teilbericht Sektorziele 2030, Juni 2022, Table 26, divided by 3.6
+        2045: 1.00e9  # kWh, 10% of state demand, own interpolation
+      NH3:
+        2027: 0
+        2030: 0
+        2035: 0
+        2040: 0
+        2045: 0
+    profile_csv:
+      # CH2: data/dummy/profiles/equally_distributed.csv
+      CH2: data/dummy/profiles/slightly_seasonal.csv
+      NH3: data/dummy/profiles/equally_distributed.csv

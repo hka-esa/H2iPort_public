@@ -1,0 +1,39 @@
+TestCompany:
+  full_name: Test Company GmbH
+  road_distance: 10  # km  #TODO: overwrite
+  coords: [49.015555, 8.3277778]  # lat/lon  #TODO: overwrite
+  demand:
+    annual_energy:
+      CH2:
+        2027: 2e6  # kWh  #TODO: overwrite
+        2030: 2e6  # kWh  #TODO: overwrite
+        2035: 2e6  # kWh  #TODO: overwrite
+        2040: 2e6  # kWh  #TODO: overwrite
+      NH3:
+        2027: 2e6  # kWh  #TODO: overwrite
+        2030: 2e6  # kWh  #TODO: overwrite
+        2035: 2e6  # kWh  #TODO: overwrite
+        2040: 2e6  # kWh  #TODO: overwrite
+    profile_csv:
+      CH2: data/dummy/profiles/equally_distributed.csv
+      NH3: data/dummy/profiles/equally_distributed.csv
+
+TestCompany2:
+  full_name: TestTest GmbH
+  road_distance: 10  # km  #TODO: overwrite
+  coords: [49.015555, 8.3277778]  # lat/lon  #TODO: overwrite
+  demand:
+    annual_energy:
+      CH2:
+        2027: 3e6  # kWh  #TODO: overwrite
+        2030: 3e6  # kWh  #TODO: overwrite
+        2035: 3e6  # kWh  #TODO: overwrite
+        2040: 3e6  # kWh  #TODO: overwrite
+      NH3:
+        2027: 3e6  # kWh  #TODO: overwrite
+        2030: 3e6  # kWh  #TODO: overwrite
+        2035: 3e6  # kWh  #TODO: overwrite
+        2040: 3e6  # kWh  #TODO: overwrite
+    profile_csv:
+      CH2: data/dummy/profiles/equally_distributed.csv
+      NH3: data/dummy/profiles/equally_distributed.csv

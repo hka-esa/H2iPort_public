@@ -1,0 +1,22 @@
+Total:
+  full_name: H2 demand
+  road_distance: 20  # km
+  coords: [49.01377, 8.40443]  # lat/lon
+  demand:
+    annual_energy:
+      CH2:
+        2027: 5.70e8  # kWh, 10% of https://www.plattform-h2bw.de/h2-bedarf
+        2030: 2.27e9  # kWh, 10% of https://www.plattform-h2bw.de/h2-bedarf
+        2035: 7.35e9  # kWh, 10% of https://www.plattform-h2bw.de/h2-bedarf
+        2040: 9.07e9  # kWh, 10% of https://www.plattform-h2bw.de/h2-bedarf
+        2045: 9.07e9  # kWh, 10% of https://www.plattform-h2bw.de/h2-bedarf
+      NH3:
+        2027: 0
+        2030: 0
+        2035: 0
+        2040: 0
+        2045: 0
+    profile_csv:
+      # CH2: data/dummy/profiles/equally_distributed.csv
+      CH2: data/dummy/profiles/slightly_seasonal.csv
+      NH3: data/dummy/profiles/equally_distributed.csv
